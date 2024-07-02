@@ -19,6 +19,7 @@ class Snapshots extends React.Component {
       snapshotListUrl: '',
     }
     this.onAction = (action) => {
+      console.log('🚀 ~ Snapshots ~ constructor ~ action:', action)
       if (action.type === 'cloneVolumeFromSnapshot') {
         const { volume, snapshot } = action.payload
         this.props.dispatch({
@@ -73,7 +74,6 @@ class Snapshots extends React.Component {
           params = {}
         }
       }
-
       this.props.dispatch({
         type: 'snapshotModal/snapshotAction',
         payload: {
@@ -150,13 +150,14 @@ class Snapshots extends React.Component {
       },
       visible: me.state.createBackModalVisible,
       onOk(data) {
+        console.log('🚀 ~ Snapshots ~ onOk ~ data:', data)
         me.props.dispatch({
           type: 'snapshotModal/backup',
           payload: {
             snapshotCreateUrl: me.props.volume.actions.snapshotCreate,
             snapshotBackupUrl: me.props.volume.actions.snapshotBackup,
             querySnapShotUrl: me.props.volume.actions.snapshotList,
-            labels: data,
+            ...data,
           },
         })
         me.setState({
