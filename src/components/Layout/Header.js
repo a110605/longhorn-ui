@@ -13,15 +13,25 @@ function Header({ isNavbar, menuPopoverVisible, location, switchMenuPopover }) {
 
   if (rancherTheme === 'auto' || rancherTheme === 'dark') {
     rancherTheme = 'dark'
-    // eslint-disable-next-line no-undef
-    DarkReader.enable({
-      brightness: 100,
-      contrast: 100,
-      sepia: 25,
-    })
   }
+  console.log('🚀 ~ Header ~ rancherTheme:', rancherTheme)
   const [theme, setTheme] = useState(rancherTheme || 'light')
   const [icon, setIcon] = useState(theme === 'light' ? lightLogo : darkLogo)
+
+  const initTheme = (t) => {
+    console.log('🚀 ~ changeTheme ~ t:', t)
+    if (t === 'dark') {
+      // eslint-disable-next-line no-undef
+      DarkReader.enable({
+        brightness: 100,
+        contrast: 100,
+        sepia: 25,
+      })
+    } else {
+      // eslint-disable-next-line no-undef
+      DarkReader.disable()
+    }
+  }
 
   const menusProps = {
     location,
@@ -45,7 +55,9 @@ function Header({ isNavbar, menuPopoverVisible, location, switchMenuPopover }) {
     setTheme(theme === 'light' ? 'dark' : 'light')
   }
 
-
+  if (theme === 'dark') {
+    initTheme(theme)
+  }
   return (
     <div className={styles.header}>
       <Row>
