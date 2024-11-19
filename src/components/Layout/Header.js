@@ -1,17 +1,63 @@
-import React from 'react'
+import React, { useState } from 'react'
 import PropTypes from 'prop-types'
-import { Row, Col, Popover, Icon } from 'antd'
+import { Row, Col, Popover, Icon, Button, Tooltip } from 'antd'
 import styles from './Header.less'
 import Menus from './Menu'
 import longhornLogo from '../../assets/images/longhorn-logo.svg'
+import darkLogo from '../../assets/images/dark2.svg'
+import lightLogo from '../../assets/images/light2.svg'
+import Cookies from 'js-cookie'
 
 function Header({ isNavbar, menuPopoverVisible, location, switchMenuPopover }) {
+  let rancherTheme = Cookies.get('R_THEME') || undefined // => 'dark/light/auto'
+
+  if (rancherTheme === 'auto' || rancherTheme === 'dark') {
+    rancherTheme = 'dark'
+  }
+  console.log('🚀 ~ Header ~ rancherTheme:', rancherTheme)
+  const [theme, setTheme] = useState(rancherTheme || 'light')
+  const [icon, setIcon] = useState(theme === 'light' ? lightLogo : darkLogo)
+
+  const initTheme = (t) => {
+    console.log('🚀 ~ changeTheme ~ t:', t)
+    if (t === 'dark') {
+      // eslint-disable-next-line no-undef
+      DarkReader.enable({
+        brightness: 100,
+        contrast: 100,
+        sepia: 25,
+      })
+    } else {
+      // eslint-disable-next-line no-undef
+      DarkReader.disable()
+    }
+  }
+
   const menusProps = {
     location,
     isNavbar,
     switchMenuPopover,
   }
 
+  const themeClick = () => {
+    if (theme === 'light') {
+      // eslint-disable-next-line no-undef
+      DarkReader.enable({
+        brightness: 100,
+        contrast: 100,
+        sepia: 25,
+      })
+    } else {
+      // eslint-disable-next-line no-undef
+      DarkReader.disable()
+    }
+    setIcon(theme === 'light' ? darkLogo : lightLogo)
+    setTheme(theme === 'light' ? 'dark' : 'light')
+  }
+
+  if (theme === 'dark') {
+    initTheme(theme)
+  }
   return (
     <div className={styles.header}>
       <Row>
@@ -31,6 +77,11 @@ function Header({ isNavbar, menuPopoverVisible, location, switchMenuPopover }) {
         </Col>
         <Col className={styles.menuCol} lg={20} md={19} sm={0} xs={0}>
           <Menus {...menusProps} />
+          <Button type="link" shape="circle" onClick={themeClick} style={{ height: 'inherit' }}>
+              <Tooltip title={`${theme} mode`}>
+              <img className={styles.themeLogo} src={icon} alt="theme" />
+              </Tooltip>
+          </Button>
         </Col>
       </Row>
     </div>
