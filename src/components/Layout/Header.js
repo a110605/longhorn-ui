@@ -10,12 +10,17 @@ import Cookies from 'js-cookie'
 
 function Header({ isNavbar, menuPopoverVisible, location, switchMenuPopover }) {
   let rancherTheme = Cookies.get('R_THEME') || undefined // => 'dark/light/auto'
-  console.log('🚀 ~ Header ~ rancherTheme:', rancherTheme)
-  if (rancherTheme === 'auto') {
+
+  if (rancherTheme === 'auto' || rancherTheme === 'dark') {
     rancherTheme = 'dark'
+    // eslint-disable-next-line no-undef
+    DarkReader.enable({
+      brightness: 100,
+      contrast: 100,
+      sepia: 25,
+    })
   }
   const [theme, setTheme] = useState(rancherTheme || 'light')
-  console.log('🚀 ~ Header ~ theme:', theme)
   const [icon, setIcon] = useState(theme === 'light' ? lightLogo : darkLogo)
 
   const menusProps = {
