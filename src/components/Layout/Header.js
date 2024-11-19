@@ -6,33 +6,40 @@ import Menus from './Menu'
 import longhornLogo from '../../assets/images/longhorn-logo.svg'
 import darkLogo from '../../assets/images/dark2.svg'
 import lightLogo from '../../assets/images/light2.svg'
+import Cookies from 'js-cookie'
 
 function Header({ isNavbar, menuPopoverVisible, location, switchMenuPopover }) {
-  const [light, setLightMode] = useState(true)
-  const [icon, setIcon] = useState(lightLogo)
+  let rancherTheme = Cookies.get('theme') || undefined // => 'dark/light/auto'
+  console.log('🚀 ~ Header ~ rancherTheme:', rancherTheme)
+  if (rancherTheme === 'auto') {
+    rancherTheme = 'dark'
+  }
+  const [theme, setTheme] = useState(rancherTheme || 'light')
+  console.log('🚀 ~ Header ~ theme:', theme)
+  const [icon, setIcon] = useState(theme === 'light' ? lightLogo : darkLogo)
+
   const menusProps = {
     location,
     isNavbar,
     switchMenuPopover,
   }
 
-  const themeTooltip = !light ? 'dark mode' : 'light mode'
   const themeClick = () => {
-    if (light) {
+    if (theme === 'light') {
       // eslint-disable-next-line no-undef
       DarkReader.enable({
         brightness: 100,
         contrast: 100,
         sepia: 25,
       })
-      setIcon(darkLogo)
     } else {
       // eslint-disable-next-line no-undef
       DarkReader.disable()
-      setIcon(lightLogo)
     }
-    setLightMode(!light)
+    setIcon(theme === 'light' ? darkLogo : lightLogo)
+    setTheme(theme === 'light' ? 'dark' : 'light')
   }
+
 
   return (
     <div className={styles.header}>
@@ -53,11 +60,11 @@ function Header({ isNavbar, menuPopoverVisible, location, switchMenuPopover }) {
         </Col>
         <Col className={styles.menuCol} lg={20} md={19} sm={0} xs={0}>
           <Menus {...menusProps} />
-            <Button type="link" shape="circle" onClick={themeClick} style={{ height: 'inherit' }}>
-               <Tooltip placement="top" title={themeTooltip}>
-                <img className={styles.themeLogo} src={icon} alt="theme" />
-               </Tooltip>
-            </Button>
+          <Button type="link" shape="circle" onClick={themeClick} style={{ height: 'inherit' }}>
+              <Tooltip title={`${theme} mode`}>
+              <img className={styles.themeLogo} src={icon} alt="theme" />
+              </Tooltip>
+          </Button>
         </Col>
       </Row>
     </div>
