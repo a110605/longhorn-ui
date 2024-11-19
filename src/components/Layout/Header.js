@@ -9,7 +9,7 @@ import lightLogo from '../../assets/images/light2.svg'
 import Cookies from 'js-cookie'
 
 function Header({ isNavbar, menuPopoverVisible, location, switchMenuPopover }) {
-  let rancherTheme = Cookies.get('theme') || undefined // => 'dark/light/auto'
+  let rancherTheme = Cookies.get('R_THEME') || undefined // => 'dark/light/auto'
   console.log('🚀 ~ Header ~ rancherTheme:', rancherTheme)
   if (rancherTheme === 'auto') {
     rancherTheme = 'dark'
