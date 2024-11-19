@@ -12,4 +12,11 @@ const app = dva({
   },
 })
 
+// eslint-disable-next-line no-undef
+DarkReader.enable({
+  brightness: 100,
+  contrast: 100,
+  sepia: 10,
+})
+
 export default app
